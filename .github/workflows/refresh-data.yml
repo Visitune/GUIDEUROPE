@@ -1,0 +1,44 @@
+name: Rafraîchir les données du registre
+
+"on":
+  schedule:
+    # Le 1er de chaque mois a 6h00 UTC. Le scrape + verification des liens
+    # prend 8-10 minutes, largement dans les limites GitHub Actions.
+    - cron: "0 6 1 * *"
+  workflow_dispatch: {}
+    # Permet aussi de le lancer a la main depuis l'onglet Actions du repo,
+    # sans attendre le 1er du mois ni repasser par une machine locale.
+
+permissions:
+  contents: write
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Installer les dépendances
+        run: pip install requests beautifulsoup4 lxml
+
+      - name: Scraper le registre (+ vérification des liens)
+        run: python scrape_hygiene_register.py --out data/guides.json --check-links
+
+      - name: Régénérer guide_finder.html
+        run: python build_tool.py
+
+      - name: Committer et pousser si les données ont changé
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          if git diff --quiet -- data/ guide_finder.html; then
+            echo "Aucun changement dans les données — rien à committer."
+            exit 0
+          fi
+          git add data/ guide_finder.html
+          git commit -m "Rafraîchissement automatique du registre ($(date -u +%Y-%m-%d))"
+          git push

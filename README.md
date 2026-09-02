@@ -81,8 +81,14 @@ utilisable sans connexion. ~1,8 Mo au total.
 
 ## Rafraîchir les données
 
-Le registre de la Commission bouge de temps en temps. Pour repartir sur des
-données à jour, sans repasser par Claude :
+**Automatique** : `.github/workflows/refresh-data.yml` relance le scraper
+(avec `--check-links`) et régénère `guide_finder.html` le 1er de chaque mois
+à 6h UTC, et commit + push seulement si les données ont changé — Vercel
+redéploie alors tout seul. Lançable aussi à la main depuis l'onglet
+**Actions** du dépôt GitHub (bouton « Run workflow », sans attendre le 1er du
+mois ni ouvrir un terminal).
+
+**En local**, pour la même chose sans passer par Claude ni GitHub :
 
 ```bash
 pip install requests beautifulsoup4 lxml   # une seule fois
