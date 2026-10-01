@@ -1,11 +1,11 @@
 {
-  "scraped_at": "2026-09-01T18:30:32+00:00",
-  "total_guides": 697,
+  "scraped_at": "2026-10-01T12:31:54+00:00",
+  "total_guides": 696,
   "total_countries": 27,
-  "links_checked": 256,
-  "links_valid": 150,
-  "link_validity_rate": 0.586,
-  "classified_official": 226,
+  "links_checked": 255,
+  "links_valid": 154,
+  "link_validity_rate": 0.604,
+  "classified_official": 225,
   "classified_derived": 331,
   "unclassified": 140
 }
